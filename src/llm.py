@@ -14,18 +14,28 @@ load_dotenv()
 
 PROVIDERS = ("gemini", "groq")
 
-GEMINI_MODEL = "gemini-2.5-flash"
-GROQ_MODEL = "llama-3.3-70b-versatile"
+# Overridable via env so the eval can pick a model with free quota headroom
+# (e.g. gemini-2.5-flash-lite has a much larger free daily request allowance).
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+
+# Fail fast instead of hanging if an API stalls or retries internally.
+TIMEOUT_SECONDS = 45
 
 
 @lru_cache(maxsize=1)
 def _gemini_client():
     from google import genai
+    from google.genai import types
 
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not set.")
-    return genai.Client(api_key=key)
+    # timeout is in milliseconds for the google-genai SDK.
+    return genai.Client(
+        api_key=key,
+        http_options=types.HttpOptions(timeout=TIMEOUT_SECONDS * 1000),
+    )
 
 
 @lru_cache(maxsize=1)
@@ -35,7 +45,7 @@ def _groq_client():
     key = os.environ.get("GROQ_API_KEY")
     if not key:
         raise RuntimeError("GROQ_API_KEY is not set.")
-    return Groq(api_key=key)
+    return Groq(api_key=key, timeout=TIMEOUT_SECONDS, max_retries=1)
 
 
 def _gemini_generate(prompt):
