@@ -1,0 +1,6 @@
+streamlit>=1.36
+psycopg2-binary>=2.9
+pandas>=2.0
+python-dotenv>=1.0
+google-genai>=1.0            # Gemini free tier (current SDK)
+groq>=0.11                   # Groq free tier (OpenAI-compatible)
