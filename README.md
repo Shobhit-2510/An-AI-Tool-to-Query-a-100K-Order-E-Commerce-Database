@@ -92,7 +92,7 @@ database's error message and tries again.
 | Purpose | Tool | Why |
 |---|---|---|
 | The AI that writes SQL | **Google Gemini 2.5 Flash** | Generous free API tier, strong at SQL |
-| A second AI (for comparison) | **Groq — Llama 3.3 70B** | Free, very fast; lets us compare two models |
+| A second AI (for comparison) | **Groq — GPT OSS 120B** | Free, very fast; lets us compare two models |
 | Database | **Supabase** (cloud PostgreSQL) | Free tier, reused from Project A |
 | Web app interface | **Streamlit** | Turns a Python script into a web app with no front-end code |
 | Hosting the live app | **Hugging Face Spaces** | Free public URL for your portfolio |
