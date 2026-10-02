@@ -3,7 +3,17 @@
 -- The Text-to-SQL app connects as this user, so even if the LLM emits
 -- DROP/DELETE/UPDATE the database itself rejects it.
 
-CREATE ROLE t2sql_readonly LOGIN PASSWORD 'change-me-to-a-strong-password';
+-- Create the role only when it does not exist. If it already exists, reset its
+-- password so this setup script can be safely rerun.
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 't2sql_readonly') THEN
+        CREATE ROLE t2sql_readonly LOGIN PASSWORD 'change-me-to-a-strong-password';
+    ELSE
+        ALTER ROLE t2sql_readonly LOGIN PASSWORD 'change-me-to-a-strong-password';
+    END IF;
+END
+$$;
 
 GRANT CONNECT ON DATABASE postgres TO t2sql_readonly;
 GRANT USAGE  ON SCHEMA public      TO t2sql_readonly;
