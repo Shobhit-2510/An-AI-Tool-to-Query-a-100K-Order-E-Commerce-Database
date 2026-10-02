@@ -17,7 +17,7 @@ PROVIDERS = ("gemini", "groq")
 # Overridable via env so the eval can pick a model with free quota headroom
 # (e.g. gemini-2.5-flash-lite has a much larger free daily request allowance).
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 
 # Fail fast instead of hanging if an API stalls or retries internally.
 TIMEOUT_SECONDS = 45
